@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang='ru'>
-			<body className={openSans.className}>
+			<body className={`${openSans.className} bg-slate-100`}>
 				<Providers>
 					<NavBar />
 					{children}
