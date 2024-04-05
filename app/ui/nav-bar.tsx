@@ -6,7 +6,7 @@ export default function NavBar() {
 		<nav className='border-2 rounded-xl bg-white border-[#E2E8F0] px-7 py-3 flex items-center justify-between'>
 			<Link
 				href='/'
-				className='text-sky-600 font-bold'
+				className='text-sky-600 font-bold hover:text-sky-500'
 			>
 				News App
 			</Link>
