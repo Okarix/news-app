@@ -1,7 +1,26 @@
-import { Menu, MenuButton, MenuList, MenuItem, MenuItemOption, MenuGroup, MenuOptionGroup, MenuDivider, Button, Tag, Input } from '@chakra-ui/react';
+'use client';
+
+import { Menu, MenuButton, MenuList, MenuItemOption, MenuOptionGroup, MenuDivider, Button, Input, Text } from '@chakra-ui/react';
 import Link from 'next/link';
+import { useRef } from 'react';
+import { useAppDispatch, useAppStore, useAppSelector } from '../redux/hooks';
+import { fetchNewsByCategory, fetchNewsBySearch, fetchNewsBySort } from '../redux/slices/newsSlice';
 
 export default function NavBar() {
+	const store = useAppStore();
+	const initialized = useRef(false);
+	if (!initialized.current) {
+		store.dispatch(fetchNewsBySort('popularity'));
+		initialized.current = true;
+	}
+
+	const names = useAppSelector(state => state.news.names);
+	const dispatch = useAppDispatch();
+
+	const handleCategoryChange = (category: string) => {
+		dispatch(fetchNewsByCategory(category));
+	};
+
 	return (
 		<nav className='border-2 rounded-xl bg-white border-[#E2E8F0] px-7 py-3 flex items-center justify-between'>
 			<Link
@@ -10,7 +29,9 @@ export default function NavBar() {
 			>
 				News App
 			</Link>
+			<Text className='text-sky-600 font-bold '>sorting by {names}</Text>
 			<Input
+				onChange={e => dispatch(fetchNewsBySearch(e.target.value))}
 				placeholder='Поиск по новостям'
 				width='400px'
 			/>
@@ -24,21 +45,46 @@ export default function NavBar() {
 				</MenuButton>
 				<MenuList minWidth='240px'>
 					<MenuOptionGroup
-						defaultValue='asc'
+						defaultValue='popular'
 						title='По дате'
 						type='radio'
 					>
-						<MenuItemOption value='asc'>Популярные</MenuItemOption>
-						<MenuItemOption value='desc'>Последние</MenuItemOption>
+						<MenuItemOption
+							value='popular'
+							onClick={() => dispatch(fetchNewsBySort('popularity'))}
+						>
+							Популярные
+						</MenuItemOption>
+						<MenuItemOption
+							value='latest'
+							onClick={() => dispatch(fetchNewsBySort('publishedAt'))}
+						>
+							Последние
+						</MenuItemOption>
 					</MenuOptionGroup>
 					<MenuDivider />
 					<MenuOptionGroup
 						title='По категориям'
-						type='checkbox'
+						type='radio'
 					>
-						<MenuItemOption value='email'>Бизнес</MenuItemOption>
-						<MenuItemOption value='phone'>Спорт</MenuItemOption>
-						<MenuItemOption value='country'>Технологии</MenuItemOption>
+						<MenuItemOption
+							value='business'
+							onClick={() => handleCategoryChange('business')}
+						>
+							Бизнес
+						</MenuItemOption>
+						<MenuItemOption
+							value='sports'
+							onClick={() => handleCategoryChange('sports')}
+						>
+							Спорт
+						</MenuItemOption>
+						<MenuItemOption
+							value='technology'
+							onClick={() => handleCategoryChange('technology')}
+						>
+							Технологии
+						</MenuItemOption>
 					</MenuOptionGroup>
 				</MenuList>
 			</Menu>

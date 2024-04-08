@@ -1,32 +1,42 @@
+'use client';
+
 import NewsCard from './news-card';
+import CardSkeleton from './card-skeleton';
+import { useAppStore, useAppDispatch, useAppSelector } from '../redux/hooks';
+import { useEffect, useRef } from 'react';
+import { fetchNewsBySort } from '../redux/slices/newsSlice';
+import { NewsItem } from '../redux/slices/newsSlice';
 
-export async function getNews() {
-	const res = await fetch('https://newsapi.org/v2/everything?domains=bbc.com&language=ru&sortBy=popularity&pageSize=30&apiKey=ba19e3583f494f5785a401428a400105', { next: { revalidate: 3600 } });
-	return res.json();
-}
+export default function Cards() {
+	const store = useAppStore();
+	const initialized = useRef(false);
+	if (!initialized.current) {
+		store.dispatch(fetchNewsBySort('popularity'));
+		initialized.current = true;
+	}
+	const news = useAppSelector(state => state.news.news.articles);
+	const loading = useAppSelector(state => state.news.loading);
+	const dispatch = useAppDispatch();
 
-type StateTypes = {
-	title: string;
-	description: string;
-	urlToImage: string;
-	url: string;
-};
+	useEffect(() => {
+		dispatch(fetchNewsBySort('popularity'));
+	}, []);
 
-export default async function Cards() {
-	const data = await getNews();
 	return (
 		<main className='flex flex-wrap justify-center gap-4'>
-			{data.articles.map((i: StateTypes) => {
-				return (
-					<NewsCard
-						key={i.urlToImage}
-						title={i.title}
-						description={i.description}
-						urlToImage={i.urlToImage}
-						url={i.url}
-					/>
-				);
-			})}
+			{loading
+				? Array.from({ length: 6 }).map((_, index) => <CardSkeleton key={index} />)
+				: news?.map((i: NewsItem, index: number) => {
+						return (
+							<NewsCard
+								key={index}
+								title={i.title}
+								description={i.description}
+								urlToImage={i.urlToImage}
+								url={i.url}
+							/>
+						);
+				  })}
 		</main>
 	);
 }

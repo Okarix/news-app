@@ -1,4 +1,4 @@
-import { Card, CardBody, CardFooter, Image, Stack, Heading, Text, Button } from '@chakra-ui/react';
+import { Card, CardBody, CardFooter, Image, Stack, Heading, Text } from '@chakra-ui/react';
 import Link from 'next/link';
 
 export default function NewsCard({ title, description, urlToImage, url }: { title: string; description: string; urlToImage: string; url: string }) {
@@ -18,7 +18,7 @@ export default function NewsCard({ title, description, urlToImage, url }: { titl
 					spacing='3'
 				>
 					<Heading size='md'>{title}</Heading>
-					<Text>{`${description.slice(0, 50)}...`}</Text>
+					<Text>{description ? `${description.slice(0, 50)}...` : null}</Text>
 				</Stack>
 			</CardBody>
 			<CardFooter>

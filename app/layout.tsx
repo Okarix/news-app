@@ -3,6 +3,7 @@ import { openSans } from './ui/fonts';
 import './ui/globals.css';
 import { Providers } from './ui/providers';
 import NavBar from './ui/nav-bar';
+import StoreProvider from './redux/StoreProvider';
 
 export const metadata: Metadata = {
 	title: 'News App',
@@ -17,10 +18,12 @@ export default function RootLayout({
 	return (
 		<html lang='ru'>
 			<body className={`${openSans.className} bg-slate-100`}>
-				<Providers>
-					<NavBar />
-					{children}
-				</Providers>
+				<StoreProvider sort='popularity'>
+					<Providers>
+						<NavBar />
+						{children}
+					</Providers>
+				</StoreProvider>
 			</body>
 		</html>
 	);
