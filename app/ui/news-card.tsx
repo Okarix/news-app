@@ -1,26 +1,29 @@
 import { Card, CardBody, CardFooter, Image, Stack, Heading, Text, Button } from '@chakra-ui/react';
 import Link from 'next/link';
 
-export default function NewsCard() {
+export default function NewsCard({ title, description, urlToImage, url }: { title: string; description: string; urlToImage: string; url: string }) {
 	return (
 		<Card maxW='sm'>
 			<CardBody>
 				<Image
-					src='https://tengrinews.kz/userdata/news/2024/news_531275/thumb_m/photo_467765.jpeg'
-					alt='Green double couch with wooden legs'
+					src={urlToImage}
+					alt={title}
 					borderRadius='lg'
+					width='344px'
+					objectFit='cover'
+					height='193px'
 				/>
 				<Stack
 					mt='6'
 					spacing='3'
 				>
-					<Heading size='md'>Сайт для подачи онлайн-петиций заработал в Казахстане</Heading>
-					<Text>Официальную онлайн-платформу для подачи петиций запустили в Казахстане. В Министерстве цифрового развития, инноваций и аэрокосмической промышленности</Text>
+					<Heading size='md'>{title}</Heading>
+					<Text>{`${description.slice(0, 50)}...`}</Text>
 				</Stack>
 			</CardBody>
 			<CardFooter>
 				<Link
-					href='/id'
+					href={url}
 					className='rounded-md bg-[#3182ce] hover:bg-[#2b6cb0] px-2 py-2 text-white font-bold'
 				>
 					Открыть новость

@@ -28,17 +28,17 @@ export default function NavBar() {
 						title='По дате'
 						type='radio'
 					>
-						<MenuItemOption value='asc'>Последние</MenuItemOption>
-						<MenuItemOption value='desc'>Первые</MenuItemOption>
+						<MenuItemOption value='asc'>Популярные</MenuItemOption>
+						<MenuItemOption value='desc'>Последние</MenuItemOption>
 					</MenuOptionGroup>
 					<MenuDivider />
 					<MenuOptionGroup
 						title='По категориям'
 						type='checkbox'
 					>
-						<MenuItemOption value='email'>Главные</MenuItemOption>
+						<MenuItemOption value='email'>Бизнес</MenuItemOption>
 						<MenuItemOption value='phone'>Спорт</MenuItemOption>
-						<MenuItemOption value='country'>Экономика</MenuItemOption>
+						<MenuItemOption value='country'>Технологии</MenuItemOption>
 					</MenuOptionGroup>
 				</MenuList>
 			</Menu>
