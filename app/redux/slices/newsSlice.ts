@@ -1,37 +1,26 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { RootState } from '../store';
 
-export const fetchNewsBySort = createAsyncThunk('news/fetchNewsBySort', async (sort: string) => {
-	try {
-		const res = await fetch(`https://newsapi.org/v2/everything?domains=bbc.com&language=ru&sortBy=${sort}&pageSize=30&apiKey=ba19e3583f494f5785a401428a400105`);
+interface FetchNewsOptions {
+	sort?: string;
+	category?: string;
+	query?: string;
+}
 
-		if (!res.ok) {
-			throw new Error('Ошибка при загрузке данных');
+const apiKey = process.env.NEXT_PUBLIC_NEWS_API_KEY;
+
+export const fetchNews = createAsyncThunk('news/fetchNews', async ({ sort, category, query }: FetchNewsOptions) => {
+	try {
+		let url = '';
+		if (category) {
+			url = `https://newsapi.org/v2/top-headlines?language=ru&category=${category}&pageSize=30&apiKey=${apiKey}`;
+		} else if (query) {
+			url = `https://newsapi.org/v2/everything?language=ru&q=${query}&pageSize=30&apiKey=${apiKey}`;
+		} else {
+			url = `https://newsapi.org/v2/everything?domains=bbc.com&language=ru&sortBy=${sort}&pageSize=30&apiKey=${apiKey}`;
 		}
-		return res.json();
-	} catch (err) {
-		console.error(err);
-		throw err;
-	}
-});
 
-export const fetchNewsByCategory = createAsyncThunk('news/fetchNewsByCategory', async (category: string) => {
-	try {
-		const res = await fetch(`https://newsapi.org/v2/top-headlines?language=ru&category=${category}&pageSize=30&apiKey=ba19e3583f494f5785a401428a400105`);
-
-		if (!res.ok) {
-			throw new Error('Ошибка при загрузке данных');
-		}
-		return res.json();
-	} catch (err) {
-		console.error(err);
-		throw err;
-	}
-});
-
-export const fetchNewsBySearch = createAsyncThunk('news/fetchNewsBySearch', async (q: string) => {
-	try {
-		const res = await fetch(`https://newsapi.org/v2/everything?language=ru&q=${q}&pageSize=30&apiKey=ba19e3583f494f5785a401428a400105`);
+		const res = await fetch(url);
 
 		if (!res.ok) {
 			throw new Error('Ошибка при загрузке данных');
@@ -54,66 +43,61 @@ export interface NewsState {
 	news: NewsItem[];
 	loading: boolean;
 	error: string | boolean | undefined;
-	names: string | null;
+	names: string | undefined;
+	currentPage: number;
+	sort: string | undefined;
+	category: string | undefined;
+	query: string | undefined;
 }
 
 const initialState: NewsState = {
 	news: [],
 	loading: false,
 	error: false,
-	names: null,
+	names: undefined,
+	currentPage: 1,
+	sort: undefined,
+	category: undefined,
+	query: undefined,
 };
 
 export const newsSlice = createSlice({
 	name: 'news',
 	initialState,
-	reducers: {},
+	reducers: {
+		setSort(state, action) {
+			state.sort = action.payload;
+		},
+		setCategory(state, action) {
+			state.category = action.payload;
+		},
+		setQuery(state, action) {
+			state.query = action.payload;
+		},
+	},
 	extraReducers: builder => {
 		builder
-			.addCase(fetchNewsBySort.pending, state => {
+			.addCase(fetchNews.pending, state => {
 				state.loading = true;
 				state.error = false;
 				state.names = '';
 			})
-			.addCase(fetchNewsBySort.fulfilled, (state, action) => {
+			.addCase(fetchNews.fulfilled, (state, action) => {
 				state.loading = false;
-				state.news = action.payload;
-				state.names = action.meta.arg;
+				state.news = action.payload.articles;
+				state.names = action.meta.arg.sort || action.meta.arg.category || action.meta.arg.query || '';
 			})
-			.addCase(fetchNewsBySort.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.error.message;
-			})
-			.addCase(fetchNewsByCategory.pending, state => {
-				state.loading = true;
-				state.error = false;
-				state.names = '';
-			})
-			.addCase(fetchNewsByCategory.fulfilled, (state, action) => {
-				state.loading = false;
-				state.news = action.payload;
-				state.names = action.meta.arg;
-			})
-			.addCase(fetchNewsByCategory.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.error.message;
-			})
-			.addCase(fetchNewsBySearch.pending, state => {
-				state.loading = true;
-				state.error = false;
-				state.names = '';
-			})
-			.addCase(fetchNewsBySearch.fulfilled, (state, action) => {
-				state.loading = false;
-				state.news = action.payload;
-				state.names = action.meta.arg;
-			})
-			.addCase(fetchNewsBySearch.rejected, (state, action) => {
+			.addCase(fetchNews.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.error.message;
 			});
 	},
 });
+
+export const { setSort, setCategory, setQuery } = newsSlice.actions;
+export const selectSort = (state: RootState) => state.news.sort;
+export const selectCategory = (state: RootState) => state.news.category;
+export const selectQuery = (state: RootState) => state.news.query;
 
 export const selectNews = (state: RootState) => state.news.news;
 export default newsSlice.reducer;

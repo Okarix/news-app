@@ -7,7 +7,6 @@ import StoreProvider from './redux/StoreProvider';
 
 export const metadata: Metadata = {
 	title: 'News App',
-	description: 'News App like Tengri News',
 };
 
 export default function RootLayout({

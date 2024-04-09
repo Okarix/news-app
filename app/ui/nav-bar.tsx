@@ -3,28 +3,26 @@
 import { useDebouncedCallback } from 'use-debounce';
 import { Menu, MenuButton, MenuList, MenuItemOption, MenuOptionGroup, MenuDivider, Button, Input, Text } from '@chakra-ui/react';
 import Link from 'next/link';
-import { useRef } from 'react';
-import { useAppDispatch, useAppStore, useAppSelector } from '../redux/hooks';
-import { fetchNewsByCategory, fetchNewsBySearch, fetchNewsBySort } from '../redux/slices/newsSlice';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { setCategory, setSort, setQuery, fetchNews } from '../redux/slices/newsSlice';
 
 export default function NavBar() {
-	const store = useAppStore();
-	const initialized = useRef(false);
-	if (!initialized.current) {
-		store.dispatch(fetchNewsBySort('popularity'));
-		initialized.current = true;
-	}
-
 	const names = useAppSelector(state => state.news.names);
 	const dispatch = useAppDispatch();
 
 	const handleCategoryChange = (category: string) => {
-		dispatch(fetchNewsByCategory(category));
+		dispatch(setCategory(category));
+		dispatch(fetchNews({ category: category }));
+	};
+
+	const handleSortChange = (sort: string) => {
+		dispatch(setSort(sort));
+		dispatch(fetchNews({ sort: sort }));
 	};
 
 	const handleSearch = useDebouncedCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-		dispatch(fetchNewsBySearch(e.target.value));
-		console.log('searching', e.target.value);
+		dispatch(setQuery(e.target.value));
+		dispatch(fetchNews({ query: e.target.value }));
 	}, 500);
 
 	return (
@@ -51,28 +49,24 @@ export default function NavBar() {
 				</MenuButton>
 				<MenuList minWidth='240px'>
 					<MenuOptionGroup
-						defaultValue='popular'
 						title='По дате'
-						type='radio'
+						defaultValue='popular'
 					>
 						<MenuItemOption
 							value='popular'
-							onClick={() => dispatch(fetchNewsBySort('popularity'))}
+							onClick={() => handleSortChange('popularity')}
 						>
 							Популярные
 						</MenuItemOption>
 						<MenuItemOption
 							value='latest'
-							onClick={() => dispatch(fetchNewsBySort('publishedAt'))}
+							onClick={() => handleSortChange('publishedAt')}
 						>
 							Последние
 						</MenuItemOption>
 					</MenuOptionGroup>
 					<MenuDivider />
-					<MenuOptionGroup
-						title='По категориям'
-						type='radio'
-					>
+					<MenuOptionGroup title='По категориям'>
 						<MenuItemOption
 							value='business'
 							onClick={() => handleCategoryChange('business')}

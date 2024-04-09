@@ -6,7 +6,7 @@ export default function NewsCard({ title, description, urlToImage, url }: { titl
 		<Card maxW='sm'>
 			<CardBody>
 				<Image
-					src={urlToImage}
+					src={urlToImage ? urlToImage : 'https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled-1150x647.png'}
 					alt={title}
 					borderRadius='lg'
 					width='344px'
