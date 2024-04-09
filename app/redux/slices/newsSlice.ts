@@ -7,7 +7,7 @@ interface FetchNewsOptions {
 	query?: string;
 }
 
-const apiKey = process.env.NEXT_PUBLIC_NEWS_API_KEY;
+const apiKey = process.env.NEXT_PUBLIC_NEWS_API_KEY || 'ba19e3583f494f5785a401428a400105';
 
 export const fetchNews = createAsyncThunk('news/fetchNews', async ({ sort, category, query }: FetchNewsOptions) => {
 	try {

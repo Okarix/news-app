@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Проект "News app"
 
-## Getting Started
+## Описание проекта
 
-First, run the development server:
+Этот проект разработанный для участия в nFactorial Incubator - является веб-приложением, разработанным с использованием фреймворка Next.js и языка программирования TypeScript. Приложение представляет собой ленту новостных статей.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Функции приложения
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **Отображение списка новостных статей на фронтенде с данными с Api**
+2. **Пользователь может кликнуть по статье и открыть ее более детально в первоисточнике**
+3. **Реализована пагинация для управления отображением новостных статей**
+4. **Можно фильтровать новости по категориям**
+5. **Обеспечена функциональность поиска, позволяющая пользователям находить новости по ключевым словам**
+6. **Включена функцию для сортировки новостных статей по дате публикации, чтобы первыми отображались последние новости и по популярности, чтобы первыми отображались самые популярные новости**
+7. **Использован API сервис под названием NEWS API который предоставляет новостные статьи с различных мировых источников**
+8. **Приложение было развернуто на сервисе хостинга, но так как в выбранном API есть система подписок, поэтому cors настроен только на локальный сервер. К сожалению я это поздно заметил**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Процесс проектирования и разработки
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. **Выбор технологий**:
 
-## Learn More
+   - **Next.js и TypeScript**: Было решено использовать Next.js в связке с TypeScript для создания мощного и эффективного веб-приложения.
+   - **Chakra UI и Tailwind**: Для создания пользовательского интерфейса были использованы библиотеки Chakra UI и Tailwind для обеспечения современного и отзывчивого дизайна.
+   - **Redux Toolkit**: Для управления состоянием приложения выбор пал на Redux Toolkit для обеспечения эффективного управления данными.
+   - **Use Debounce**: Использование `useDebounce` для оптимизации производительности в обработке пользовательского ввода и запросов к API.
 
-To learn more about Next.js, take a look at the following resources:
+2. **Проектирование пользовательского интерфейса**:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   - В процессе проектирования интерфейса уделено особое внимание простоте и интуитивной понятности.
+   - Использование компонентов Chakra UI и стилей Tailwind для создания современного и приятного визуального стиля.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+3. **Разработка приложения**:
+   - **Компонентная архитектура**: При разработке приложения использовалась стандартная архитектура Next js(App) так как она предоставляет довольно удобную и гибкую возможность для проектирования приложения
+   - **Использование Redux Toolkit**: Для управления состоянием приложения был использован Redux Toolkit для упрощения процесса разработки и обеспечения масштабируемости.
+   - **Оптимизация производительности**: Использование `useDebounce` для оптимизации обработки пользовательского ввода и запросов к API, что позволяет уменьшить нагрузку на сервер и улучшить пользовательский опыт.
 
-## Deploy on Vercel
+## Запуск приложения
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Для начала нужно клонировать данный репозиторий к себе с помощью git clone [путь к репозиторию]
+2. После клонирования запустить и ввести команду в терминале npm i либо npm install для установления всех зависимостей
+3. После установки всех зависимостей можно запустить приложение с помощью команды npm run dev.
+4. Чтобы увидеть приложение нужно будет перейти по адресу [http://localhost:3000](http://localhost:3000)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Скрины с приложения
+
+![Скрин главного экрана](image.png)
+![Скрин пагинации](image-1.png)
+![скрин поиска по ключевым словам](image-2.png)
+![скрин фильтра](image-3.png)
