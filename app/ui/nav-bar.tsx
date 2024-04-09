@@ -1,5 +1,6 @@
 'use client';
 
+import { useDebouncedCallback } from 'use-debounce';
 import { Menu, MenuButton, MenuList, MenuItemOption, MenuOptionGroup, MenuDivider, Button, Input, Text } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRef } from 'react';
@@ -21,6 +22,11 @@ export default function NavBar() {
 		dispatch(fetchNewsByCategory(category));
 	};
 
+	const handleSearch = useDebouncedCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+		dispatch(fetchNewsBySearch(e.target.value));
+		console.log('searching', e.target.value);
+	}, 500);
+
 	return (
 		<nav className='border-2 rounded-xl bg-white border-[#E2E8F0] px-7 py-3 flex items-center justify-between'>
 			<Link
@@ -31,7 +37,7 @@ export default function NavBar() {
 			</Link>
 			<Text className='text-sky-600 font-bold '>sorting by {names}</Text>
 			<Input
-				onChange={e => dispatch(fetchNewsBySearch(e.target.value))}
+				onChange={e => handleSearch(e)}
 				placeholder='Поиск по новостям'
 				width='400px'
 			/>
